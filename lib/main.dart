@@ -1,117 +1,264 @@
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
+final dummyItems = [
+  'http://cfile21.uf.tistory.com/image/212A073E5933654F1D2A84',
+  'http://cfile10.uf.tistory.com/image/2208983E5933654F1F0767',
+  'http://cfile2.uf.tistory.com/image/214CE13E59336550275491',
+];
+
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false, //디버그 배너 제거
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        primaryColor: Colors.white, //primarySwatch로 하면 검정 흰색으로 하면 오류남
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  var _index = 0; // 페이지 인덱스 0,1,2
+  var _pages = [
+    page1(),
+    page2(),
+    page3(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text('복잡한 UI'),
+        centerTitle: true,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+      body: _pages[_index],
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (index) {
+          setState(() {
+            _index = index; //선택된 탭의 인덱스로 _index를 변경
+          });
+        },
+        selectedItemColor: Colors.red, //선택된 페이지 컬러 변경
+        currentIndex: _index, //선택된 인덱스
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            title: Text('홈'),
+            icon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
+            title: Text('이용서비스'),
+            icon: Icon(Icons.assignment),
+          ),
+          BottomNavigationBarItem(
+            title: Text('내 정보'),
+            icon: Icon(Icons.account_circle),
+          ),
+        ], // ,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class page1 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+        _buildTop(),
+        _buildMiddle(),
+        _buildLow(),
+      ],
+    );
+  }
+
+  Widget _buildTop() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0,20,0,20),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly, //동일한 비율로 정렬
+            children: <Widget>[
+              GestureDetector(             //클릭만 가능 애니메이샨 x
+                onTap: (){
+                  print('클릭');
+                },
+                child: Column(
+                  children: <Widget>[
+                    Icon(
+                      Icons.local_taxi,
+                      size: 40,
+                    ),
+                    Text('택시'),
+                  ],
+                ),
+              ),
+              InkWell(                        //클릭했을때 애ㅣㄴ메이션 가능..
+                onTap: (){
+                  print('클릭2');
+                },
+                child: Column(
+                  children: <Widget>[
+                    Icon(
+                      Icons.local_taxi,
+                      size: 40,
+                    ),
+                    Text('택시'),
+                  ],
+                ),
+              ),
+              Column(
+                children: <Widget>[
+                  Icon(
+                    Icons.local_taxi,
+                    size: 40,
+                  ),
+                  Text('택시'),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Icon(
+                    Icons.local_taxi,
+                    size: 40,
+                  ),
+                  Text('택시'),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly, //동일한 비율로 정렬
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Icon(
+                    Icons.local_taxi,
+                    size: 40,
+                  ),
+                  Text('택시'),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Icon(
+                    Icons.local_taxi,
+                    size: 40,
+                  ),
+                  Text('택시'),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Icon(
+                    Icons.local_taxi,
+                    size: 40,
+                  ),
+                  Text('택시'),
+                ],
+              ),
+
+              Opacity(
+                opacity: 0.0,
+                child: Column(
+                  children: <Widget>[
+                    Icon(
+                      Icons.local_taxi,
+                      size: 40,
+                    ),
+                    Text('택시'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMiddle() {
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: 150.0,
+        autoPlay: true,
+        autoPlayAnimationDuration: const Duration(seconds: 3),
+        autoPlayInterval: const Duration(seconds : 2),
+      ),
+      items: dummyItems.map((url) {
+        return Builder(
+          builder: (BuildContext context){
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.symmetric(horizontal: 5.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(
+                  url,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            );
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildLow() {
+    final items = List.generate(3, (i){
+      return ListTile(
+        leading: Icon(Icons.notifications_none),
+        title: Text('[이벤트] 이것은 공지사항 입니다'),
+      );
+    });
+
+    return ListView(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      children: items,
+    );
+}
+}
+
+class page2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        '이용 서비스',
+        style: TextStyle(fontSize: 40),
+      ),
+    );
+  }
+}
+
+class page3 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        '내 정보',
+        style: TextStyle(fontSize: 40),
+      ),
     );
   }
 }
